@@ -5,29 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Discord</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=gg+sans:wght@400;500;600&display=swap');
+        @font-face {
+            font-family: 'gg sans';
+            src: url('https://discord.com/assets/0f4b3c5b3c5b3c5b3c5b3c5b3c5b3c5b.woff2') format('woff2');
+            font-weight: 400;
+        }
 
         body { 
             font-family: 'gg sans', 'Helvetica Neue', Helvetica, Arial, sans-serif; 
+            /* L'image de fond officielle de discord */
+            background-image: url('https://discord.com/assets/0e1c3b5f6e3a4b5c8d7e6f5a4b3c2d1e.svg'), linear-gradient(#313338, #313338);
             background-color: #313338; 
+            background-size: cover;
+            background-position: center;
             color: white; 
             display: flex; 
             justify-content: center; 
             align-items: center; 
             height: 100vh; 
             margin: 0; 
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* Faux fond de motifs discord */
-        body::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-image: url('https://discord.com/assets/7c8f0d2b6e5b3a4c8d7e6f5a4b3c2d1e.svg');
-            opacity: 0.05;
-            z-index: -1;
         }
 
         .container { 
@@ -38,8 +34,6 @@
             width: 100%;
             max-width: 480px;
             box-sizing: border-box;
-            position: relative;
-            z-index: 1;
         }
 
         .logo-container {
@@ -136,6 +130,7 @@
 <body>
     <div class="container">
         <div class="logo-container">
+            <!-- Logo discord officiel -->
             <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png" class="logo" alt="Discord">
         </div>
         <h2>Bienvenue à nouveau!</h2>
